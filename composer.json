@@ -1,0 +1,31 @@
+{
+    "name": "puzzley/sms",
+    "description": "This is a package for sending SMS",
+    "version": "1.0.0",
+    "keywords": [
+        "laravel",
+        "laravel4.2",
+        "laravel42",
+        "sms",
+        "payamresan",
+        "message"
+    ],
+    "time": "2018-03-01",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mohammad Zare Moghadam",
+            "email": "mzmoghadam72@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "mzmoghadam72@gmail.com"
+    },
+    "autoload": {
+        "psr-4": {
+            "Puzzley\\SMS\\": "src/"
+        }
+    }
+}
