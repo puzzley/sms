@@ -1,9 +1,11 @@
 Laravel 4.2 package for sending SMS
 =====================
+Currently only [Payam Resan](https://www.payam-resan.com/) service implemented.
 
 Requirements
 ============
 php >= 5.5
+
 laravel 4.2
 
 Installation
@@ -14,17 +16,32 @@ install package by composer and it will placed in vendor directory
 
 Add the service provider and facade in your config/app.php
 
-Service Provider
+Service Provider:
 
     Puzzley\SMS\SMSServiceProvider
 
-Facade
+Facade:
 
     'SMS' => 'Puzzley\SMS\SMS',
 
-Migrations
+Migrations:
 
     php artisan migrate --path=vendor/puzzley/sms/src/database/migrations
+
+Config:
+Add `sms.php` config file to `config` directory.
+    
+    return [
+        //[Payam Resan](https://www.payam-resan.com/) account information
+        'PayamResan' => [
+            'username' => '...',
+            'password' => '...',
+            'service_numbers' => [
+                'default' => '123456',
+                'primary' => '654321',
+            ]
+        ]
+    ];
 
 
 Usage
@@ -33,7 +50,6 @@ Usage
     $service = SMS::PayamResan();
 
     //int: positive means success and negative means failure
-    //int > 0
     $smsId = $service->send('09013620901', 'Hi I'm MZM.');
     //int < 0
     $error = $service->error($smsId);
