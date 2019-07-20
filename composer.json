@@ -2,7 +2,7 @@
     "name": "puzzley/sms",
     "description": "This is a package for sending SMS",
     "require": {
-        "laravel/laravel": "^4.2.0"
+        "laravel/laravel": "^4.2"
     },
     "keywords": [
         "laravel",
