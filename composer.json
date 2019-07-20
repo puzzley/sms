@@ -1,7 +1,6 @@
 {
     "name": "puzzley/sms",
     "description": "This is a package for sending SMS",
-    "version": "1.0.0-BETA",
     "require": {
         "laravel/laravel": "^4.2.0"
     },
