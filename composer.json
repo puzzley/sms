@@ -1,16 +1,18 @@
 {
     "name": "puzzley/sms",
     "description": "This is a package for sending SMS",
-    "version": "1.0.0",
+    "version": "1.0.0-BETA",
+    "require": {
+        "laravel/laravel": "^4.2.0"
+    },
     "keywords": [
         "laravel",
         "laravel4.2",
         "laravel42",
         "sms",
-        "payamresan",
-        "message"
+        "message",
+        "payamresan"
     ],
-    "time": "2018-03-01",
     "type": "library",
     "license": "MIT",
     "authors": [

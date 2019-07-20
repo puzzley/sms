@@ -3,8 +3,8 @@ namespace Puzzley\SMS;
 
 use Puzzley\SMS\AbstractSMS;
 use Puzzley\SMS\Enum;
-use Puzzley\SMS\Exception;
 use Puzzley\SMS\ServiceInterface;
+use Puzzley\SMS\Exception\InvalidServiceException;
 
 /**
  * class ServiceFactory
@@ -33,7 +33,8 @@ class ServiceFactory
     private function getSupportedServices()
     {
         return [
-            Enum::PAYAM_RESAN
+            Enum::PAYAM_RESAN,
+            Enum::KAVE_NEGAR,
         ];
     }
 

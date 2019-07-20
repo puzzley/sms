@@ -84,7 +84,7 @@ abstract class AbstractService implements ServiceInterface
     protected function getToken($length = 6)
     {
         $token = "";
-        $codeAlphabet = "0123456789";
+        $codeAlphabet = "123456789";
         $max = strlen($codeAlphabet);
 
         for ($i=0; $i < $length; $i++) {
@@ -111,16 +111,20 @@ abstract class AbstractService implements ServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function sendVerifyCode($phoneNumber, $text)
+    public function sendVerifyCode($phoneNumber, $text, $type = null, $extra = [])
     {
         $code = $this->getToken();
-        $toSend = $text . " " . $code;
-        if ($this->send($phoneNumber, $toSend) < 0) {
-            return null;
-        }
         $verify = new Verify();
         $verify->code = $code;
-        $verify->save();
+        if ($verify->save()) {
+            $toSend = $text . " " . $code;
+            if ($this->send($phoneNumber, $toSend) < 0) {
+                $verify->delete();
+                return null;
+            }
+        } else {
+            return null;
+        }
 
         return $code;
     }
@@ -137,8 +141,7 @@ abstract class AbstractService implements ServiceInterface
             return true;
         } catch (ModelNotFoundException $e) {
 
+            return false;
         }
-
-        return false;
     }
 }

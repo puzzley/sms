@@ -4,6 +4,9 @@ namespace Puzzley\SMS\PayamResan;
 use Puzzley\SMS\AbstractService;
 use Puzzley\SMS\Enum;
 use Illuminate\Support\Facades\Lang;
+use Puzzley\SMS\PayamResan\Exception\ApiException;
+use Puzzley\SMS\Exception\HttpException;
+use Puzzley\SMS\Exception\ApiException as BaseApiException;
 
 /**
  * Payam Resan SMS Service
@@ -18,7 +21,7 @@ class PayamResan extends AbstractService
     const MAX_ALLOWED_RECIPIENTS = 99;
 
     /**
-     * @var SoapClient
+     * @var \SoapClient
      */
     private $client;
 
@@ -39,9 +42,19 @@ class PayamResan extends AbstractService
     }
 
     /**
-     * {@inheritdoc}
+     * Send SMS to one recipient
+     * 
+     * @param string $recipient Recipient phone number.
+     *                          each number has to begin with +989 or 09
+     * @param string $body SMS body
+     * @param int|null $date unix time
+     * 
+     * @return int message id on success
+     * 
+     * @throws ApiException
+     * @throws \Exception
      */
-    public function send($recipient, $body)
+    public function send($recipient, $body, $date = null)
     {
         try {
             $res = $this->client->SendMessage(
@@ -55,88 +68,62 @@ class PayamResan extends AbstractService
                     'AllowedDelay' => 0,
                 ]
             );
-            
-            return $res->SendMessageResult->long;
+            $sendResult = $res->SendMessageResult->long;
+            if ($sendResult > 0)
+                return $sendResult;
+            else
+                throw new ApiException('Payam Resan Api Exception', $sendResult);
         } catch (SoapFault $ex) {
-            //$ex->faultstring;
-        }
-
-        return (-1000);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function sendBatch(array $recipients, $body)
-    {
-        $this->checkRecipientsCount($recipients);
-        try {
-            $res = $this->client->SendMessage(
-                [
-                    'Username' => $this->username,
-                    'PassWord' => $this->password,
-                    'MessageBodie' => $body,
-                    'RecipientNumbers' => $recipients,
-                    'SenderNumber' => $this->number,
-                    'Type' => 1,
-                    'AllowedDelay' => 0,
-                ]
-            );
-            return $res->SendMessageResult->long;
-        } catch (SoapFault $ex) {
-            //$ex->faultstring;
+            throw new \Exception($ex->faultstring, 400);
         }
     }
 
     /**
-     * {@inheritdoc}
+     * Get service credit
+     * 
+     * @return float
+     * 
+     * @throws \Exception
      */
     public function credit()
     {
-        return $this->client->GeCredit(
-            [
-                'Username' => $this->username,
-                'PassWord' => $this->password,
-            ]
-        )->GeCreditResult;
+        try {
+            return $this->client->GeCredit(
+                [
+                    'Username' => $this->username,
+                    'PassWord' => $this->password,
+                ]
+            )->GeCreditResult;   
+        } catch (SoapFault $ex) {
+            throw new \Exception($ex->faultstring, 400);
+        }
     }
 
     /**
-     * {@inheritdoc}
+     * Get SMS delivery status
+     * 
+     * @param string $messageId
+     * 
+     * @return bool     this method will return true or false
+     *                  true means delivered and false means not delivered
+     * 
+     * @throws \Exception
      */
     public function status($messageId)
     {
-        $res = $this->client->GetMessagesStatus(
-            [
-                'Username' => $this->username,
-                'PassWord' => $this->password,
-                'messagesId' => [$messageId],
-            ]
-        );
-        return $res->GetMessagesStatusResult->long === 4;
-    }
+        try {
+            $res = $this->client->GetMessagesStatus(
+                [
+                    'Username' => $this->username,
+                    'PassWord' => $this->password,
+                    'messagesId' => [$messageId],
+                ]
+            );
 
-    /**
-     * {@inheritdoc}    
-     */
-    public function statusBatch(array $messagesId)
-    {
-        $this->checkRecipientsCount($recipients);
-
-        $res = $this->client->GetMessagesStatus(
-            [
-                'Username' => $this->username,
-                'PassWord' => $this->password,
-                'messagesId' => $messageId,
-            ]
-        );
-
-        return array_map(
-            function($p){
-                return $p === 4;
-            },
-            $res->GetMessagesStatusResult->long
-        );
+            return $res->GetMessagesStatusResult->long === 4;
+        } catch (SoapFault $ex) {
+            throw new \Exception($ex->faultstring, 400);
+        }
     }
 
     /**
@@ -148,7 +135,7 @@ class PayamResan extends AbstractService
             $code = -30;
         }
         
-        return Lang::get('SMS::errors.PayamResan.' . (string) $code);
+        return Lang::get('SMS::errors.' . Enum::PAYAM_RESAN . '.' . (string) $code);
     }
 
     /**
@@ -157,14 +144,14 @@ class PayamResan extends AbstractService
      * 
      * @param array $recipients an array of all recipients
      * 
-     * @throws Exception
+     * @throws \Exception
      * 
      * @return void
      */
     private function checkRecipientsCount(array $recipients)
     {
         if (count($recipients) > self::MAX_ALLOWED_RECIPIENTS) {
-            throw new Exception(Lang::get('SMS::errors.PayamResan.max_recipients'), 400);
+            throw new \Exception(Lang::get('SMS::errors.' . Enum::PAYAM_RESAN . '.max_recipients'), 400);
         }
         
         return;

@@ -3,7 +3,7 @@ namespace Puzzley\SMS\Exception;
 
 use Illuminate\Support\Facades\Lang;
 
-class InvalidServiceException extends Exception
+class InvalidServiceException extends \Exception
 {
     public function __construct()
     {
