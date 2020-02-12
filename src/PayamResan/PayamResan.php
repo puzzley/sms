@@ -73,7 +73,7 @@ class PayamResan extends AbstractService
                 return $sendResult;
             else
                 throw new ApiException('Payam Resan Api Exception', $sendResult);
-        } catch (SoapFault $ex) {
+        } catch (\SoapFault $ex) {
             throw new \Exception($ex->faultstring, 400);
         }
     }
@@ -94,7 +94,7 @@ class PayamResan extends AbstractService
                     'PassWord' => $this->password,
                 ]
             )->GeCreditResult;   
-        } catch (SoapFault $ex) {
+        } catch (\SoapFault $ex) {
             throw new \Exception($ex->faultstring, 400);
         }
     }
@@ -121,7 +121,7 @@ class PayamResan extends AbstractService
             );
 
             return $res->GetMessagesStatusResult->long === 4;
-        } catch (SoapFault $ex) {
+        } catch (\SoapFault $ex) {
             throw new \Exception($ex->faultstring, 400);
         }
     }
