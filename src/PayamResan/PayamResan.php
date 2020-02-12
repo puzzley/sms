@@ -38,6 +38,7 @@ class PayamResan extends AbstractService
             set_error_handler('var_dump', 0); // Never called because of empty mask.
             @trigger_error("");
             restore_error_handler();
+            throw new \Exception($e->faultstring, 400);
         }
     }
 
