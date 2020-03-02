@@ -25,7 +25,7 @@ Installation
 
 ### Migrations:
 
-`php artisan migrate --path=vendor/puzzley/sms/src/database/migrations`
+`php artisan migrate --path=vendor/puzzley/sms/src/Database/migrations`
 
 ### Config:
 #### Add `sms.php` config file to `config` directory.
