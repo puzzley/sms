@@ -111,11 +111,12 @@ abstract class AbstractService implements ServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function sendVerifyCode($phoneNumber, $text, $type = null, $extra = [])
+    public function sendVerifyCode($phoneNumber, $token, $text, $type = null, $extra = [])
     {
         $code = $this->getToken();
         $verify = new Verify();
         $verify->code = $code;
+        $verify->token = $token;
         if ($verify->save()) {
             $toSend = $text . " " . $code;
             if ($this->send($phoneNumber, $toSend) < 0) {
@@ -132,10 +133,12 @@ abstract class AbstractService implements ServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function verify($code)
+    public function verify($code, $token)
     {
         try {
-            $verify = Verify::where('code', '=', $code)->firstOrFail();
+            $verify = Verify::where('code', '=', $code)
+                ->where('token', '=', $token)
+                ->firstOrFail();
             $verify->delete();
 
             return true;

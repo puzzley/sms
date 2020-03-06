@@ -144,7 +144,10 @@ class KaveNegar extends AbstractService implements LookupInterface
      * @param string $phoneNumber   in the following format:
      *                              09121234567, 00989121234567, +989121234567,
      *                              9121234567
+     * @param string $token
      * @param string $template template name that you defined in Kave Negar
+     * @param string $type
+     * @param array $extra
      * 
      * @return string generated code
      * 
@@ -152,11 +155,12 @@ class KaveNegar extends AbstractService implements LookupInterface
      * @throws HttpException
      * @throws \Exception
      */
-    public function sendVerifyCode($phoneNumber, $template, $type = 'sms', $extra = [])
+    public function sendVerifyCode($phoneNumber, $token, $template, $type = 'sms', $extra = [])
     {
         $code = $this->getToken();
         $verify = new Verify();
         $verify->code = $code;
+        $verify->token = $token;
         if ($verify->save()) {
             try {
                 $token2 = $token3 = null;

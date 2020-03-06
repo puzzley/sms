@@ -67,6 +67,7 @@ interface ServiceInterface
      * Send a verification code to a phone number
      * 
      * @param string $phoneNumber in the following format: 09xxxxxxxxx or +989xxxxxxxxx
+     * @param string $token
      * @param string $text this text will display before code
      * @param string $type sms|call
      * 
@@ -76,14 +77,15 @@ interface ServiceInterface
      * @throws HttpException
      * @throws \Exception
      */
-    public function sendVerifyCode($phoneNumber, $text, $type = null, $extra = []);
+    public function sendVerifyCode($phoneNumber, $token, $text, $type = null, $extra = []);
 
     /**
      * Check verify code in database table and return true if exists or return false
      * 
      * @param string $code
+     * @param string $token
      * 
      * @return bool
      */
-    public function verify($code);
+    public function verify($code, $token);
 }
