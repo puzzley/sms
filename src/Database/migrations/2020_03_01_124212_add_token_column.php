@@ -15,9 +15,7 @@ class AddTokenColumn extends Migration
 		Schema::table(
 			$this->getTable(),
 			function(Blueprint $table) {
-				if (!Schema::hasColumn($this->getTable(), 'token')) {
-					$table->string('token', 255)->after('code');
-				}
+				$table->string('token', 255)->after('code');
 			}
 		);
 	}
@@ -32,9 +30,7 @@ class AddTokenColumn extends Migration
 		Schema::table(
 			$this->getTable(),
 			function(Blueprint $table) {
-				if (Schema::hasColumn($this->getTable(), 'token')) {
-					$table->dropColumn('token');
-				}
+				$table->dropColumn('token');
 			}
 		);
 	}
