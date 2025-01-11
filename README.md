@@ -1,7 +1,3 @@
-Here’s the updated README file with a concise configuration section:
-
----
-
 # Laravel SMS Package 📲
 A Laravel package for sending SMS using **PayamResan**, **KaveNegar**, and **FarazSMS** drivers.
 
