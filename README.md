@@ -30,7 +30,7 @@ composer require puzzley/sms
 
    PAYAMRESAN_USERNAME=your-username
    PAYAMRESAN_PASSWORD=your-password
-   PAYAMRESAN_SERVICE_NUMBER_DEFAULT=500024200030
+   PAYAMRESAN_SERVICE_NUMBER_DEFAULT=XXXX
 
    KAVENEGAR_API_KEY=your-api-key
    KAVENEGAR_SERVICE_NUMBER_DEFAULT=90004803
@@ -74,7 +74,3 @@ SMS::driver('KaveNegar')->sendVerifyCode('09123456789', 'Verification message');
 
 ## License 📜
 This package is open-sourced software licensed under the [MIT License](LICENSE).
-
----
-
-This README includes essential information while keeping the configuration section concise. Let me know if further adjustments are needed! 😊
