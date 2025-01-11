@@ -35,7 +35,11 @@ abstract class AbstractService implements ServiceInterface
      * @var string
      */
     protected $baseUrl;
-
+    /**
+     * Service Pattern Code
+     * @var string
+     */
+    protected $patternCode;
     /**
      * Load service configs and namespaces
      * @param string $service service name eg: PayamResan
@@ -44,9 +48,15 @@ abstract class AbstractService implements ServiceInterface
     {
         \Lang::addNamespace('SMS', __DIR__ . '/lang');
         $this->service = $service;
-        $this->username = \Config::get('sms.' . $service . '.username', '');        
+        $this->username = \Config::get('sms.' . $service . '.username', '');
         $this->password = \Config::get('sms.' . $service . '.password', '');
         $this->useNumber();
+    }
+
+    public function setPattern($patternCode)
+    {
+        $this->patternCode = $patternCode;
+        return $this;
     }
 
     /**
@@ -104,7 +114,7 @@ abstract class AbstractService implements ServiceInterface
         } else {
             $this->number = \Config::get('sms.' . $this->service . '.service_numbers.' . $numberId, $this->number);
         }
-        
+
         return $this;
     }
 

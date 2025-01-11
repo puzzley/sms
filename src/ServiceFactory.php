@@ -30,11 +30,12 @@ class ServiceFactory
     /**
      * @return array
      */
-    private function getSupportedServices()
+    private function getSupportedServices(): array
     {
         return [
             Enum::PAYAM_RESAN,
             Enum::KAVE_NEGAR,
+            Enum::FARAZ_SMS,
         ];
     }
 
@@ -52,9 +53,9 @@ class ServiceFactory
     /**
      * @param string $name
      * @param array $arguments
-     * 
+     *
      * @throws InvalidServiceException
-     * 
+     *
      * @return ServiceInterface
      */
     public function __call($name, $arguments)

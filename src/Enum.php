@@ -5,5 +5,6 @@ class Enum
 {
     //SMS services
     const PAYAM_RESAN = 'PayamResan';
-    const KAVE_NEGAR = 'KaveNegar';
+    const KAVE_NEGAR  = 'KaveNegar';
+    const FARAZ_SMS   = 'Farazsms';
 }
