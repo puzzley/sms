@@ -5,10 +5,8 @@ use Puzzley\SMS\AbstractService;
 use Puzzley\SMS\Enum;
 use Illuminate\Support\Facades\Lang;
 use Puzzley\SMS\Database\Models\Verify;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Puzzley\SMS\KaveNegar\Exception\ApiException;
 use Puzzley\SMS\Exception\HttpException;
-use Puzzley\SMS\Exception\ApiException as BaseApiException;
 
 /**
  * @author Mohammad Zare Moghadam (mzmoghadam72@gmail.com)
@@ -36,7 +34,7 @@ class KaveNegar extends AbstractService implements LookupInterface
 
     /**
      * @param string $path
-     * 
+     *
      * @return sring
      */
     private function generateApiUrl($path)
@@ -47,16 +45,15 @@ class KaveNegar extends AbstractService implements LookupInterface
     /**
      * @param string $path
      * @param array $params parameters to send to webservice
-     * 
+     *
      * @return array
-     * 
+     *
      * @throws HttpException on http error
      * @throws ApiException on api error
      */
     private function sendRequest($path, array $params = [])
     {
         $ch = curl_init($this->generateApiUrl($path));
-
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -148,9 +145,9 @@ class KaveNegar extends AbstractService implements LookupInterface
      * @param string $template template name that you defined in Kave Negar
      * @param string $type
      * @param array $extra
-     * 
+     *
      * @return string generated code
-     * 
+     *
      * @throws ApiException
      * @throws HttpException
      * @throws \Exception
@@ -194,16 +191,18 @@ class KaveNegar extends AbstractService implements LookupInterface
      */
     public function send($recipient, $body, $date = null)
     {
+        $recipient = is_array($recipient) ? implode(',', $recipient) : $recipient;
+        
         try {
-            $result = $this->sendRequest(
-                'sms/send',
-                [
-                    'receptor' => $recipient,
-                    'message' => $body,
-                    'sender' => $this->number,
-                    'date' => $date === null ? time() : $date,
-                ]
-            );
+                $result = $this->sendRequest(
+                    'sms/send',
+                    [
+                        'receptor' => $recipient,
+                        'message' => $body,
+                        'sender' => $this->number,
+                        'date' => $date === null ? time() : $date,
+                    ]
+                );
         } catch (ApiException $e) {
             throw new ApiException($e->getMessage(), $e->getCode());
         } catch (HttpException $e) {
@@ -242,6 +241,6 @@ class KaveNegar extends AbstractService implements LookupInterface
      */
     public function error($errorId)
     {
-        return Lang::get('SMS::errors.' . Enum::KAVE_NEGAR . '.' . (string) $code);
+        return Lang::get('SMS::errors.' . Enum::KAVE_NEGAR . '.' . (string) $errorId);
     }
 }

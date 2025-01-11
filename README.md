@@ -1,77 +1,76 @@
-Laravel 4.2 package for sending SMS
-=====================
-[Payam Resan](https://www.payam-resan.com/) and [Kave Negar](https://kavenegar.com/) services implemented.
+# Laravel SMS Package 📲
+A Laravel package for sending SMS using **PayamResan**, **KaveNegar**, and **FarazSMS** drivers.
 
-Requirements
-============
-* php >= 5.6
-* laravel ^4.2.0
+## Requirements ⚙️
+- **PHP**: `>=7.2`
+- **Laravel**: `^8.0`, `^9.0`, `^10.0`
 
-Installation
-============
-### install package by composer and it will placed in vendor directory
+---
 
-`composer require puzzley/sms:dev-master`
-
-### Add the service provider and facade in your config/app.php
-
-### Service Provider:
-
-`Puzzley\SMS\SMSServiceProvider`
-
-### Facade:
-
-`'SMS' => 'Puzzley\SMS\SMS',`
-
-### Migrations:
-
-`php artisan migrate --path=vendor/puzzley/sms/src/Database/migrations`
-
-### Config:
-#### Add `sms.php` config file to `config` directory.
-
-```    
-return [
-    //[Payam Resan](https://www.payam-resan.com/) account information
-    'PayamResan' => [
-        'username' => '...',
-        'password' => '...',
-        'service_numbers' => [
-            'default' => '123456',
-            'primary' => '654321',
-        ]
-    ]
-];
+## Installation 🛠️
+Install the package via Composer:
+```bash
+composer require puzzley/sms
 ```
 
-Usage
-=====
-    // Puzzley\SMS\ServiceInterface
-    
-    $service = SMS::PayamResan();
-    
-    $smsId = $service->send('09013620901', 'Hi I'm MZM.');
-    
-    $error = $service->error($smsId);
-    
-    // bool: true means success and false means failure
-    $status = $service->status($smsId);
+---
 
-    // service_id was set in config
-    $service->useNumber('number_id');
-    
-    // instead of number_id you can set a number directly
-    $service->useNumber(8000xxx, true);
+## Configuration ⚙️
 
-    // this will send a verification code to this number (Payam Resan)
-    $service->sendVerifyCode('09013620901', 'text that you want to send with the verification code');
+1. **Publish the Configuration File**:
+   Run the following command to publish the `sms.php` config file:
+   ```bash
+   php artisan vendor:publish --tag=sms-config
+   ```
 
-    // this will send a verification code to this number or will call (Kaveh Negar)
-    $service->sendVerifyCode('09013620901', 'text that you want to send with the verification code', 'sms', []);
-    $service->sendVerifyCode('09013620901', 'text that you want to send with the verification code', 'call', []);
-    
-    // this will return true or false
-    $service->verify($code);
+2. **Add Environment Variables**:
+   Update your `.env` file with the necessary credentials:
+   ```env
+   DEFAULT_SMS_SERVICE=KaveNegar
 
-Credits
-=======
+   PAYAMRESAN_USERNAME=your-username
+   PAYAMRESAN_PASSWORD=your-password
+   PAYAMRESAN_SERVICE_NUMBER_DEFAULT=XXXX
+
+   KAVENEGAR_API_KEY=your-api-key
+   KAVENEGAR_SERVICE_NUMBER_DEFAULT=90004803
+
+   FARAZSMS_USERNAME=your-username
+   FARAZSMS_PASSWORD=your-password
+   FARAZSMS_SERVICE_NUMBER_DEFAULT=+983000505
+   ```
+3. **Set Default Service**:
+   The default SMS service can be set in your `.env` file using `DEFAULT_SMS_SERVICE`.
+
+---
+
+## Usage 🚀
+
+The package provides a unified interface for interacting with different SMS services:
+
+```php
+use SMS;
+
+// Sending an SMS
+$smsId = SMS::send('09123456789', 'Your message here');
+
+// Using a specific driver
+$smsId = SMS::driver('FarazSMS')->send('09123456789', 'Your message here');
+
+// Check Status
+$status = SMS::driver('PayamResan')->status($smsId);
+
+// Send Verification Code
+SMS::driver('KaveNegar')->sendVerifyCode('09123456789', 'Verification message');
+```
+
+---
+
+## Credits 👏
+- **Mohammad Zare Moghadam**
+- **Amir Reza Rezaei**
+
+---
+
+## License 📜
+This package is open-sourced software licensed under the [MIT License](LICENSE).
