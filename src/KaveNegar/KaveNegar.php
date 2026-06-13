@@ -59,12 +59,15 @@ class KaveNegar extends AbstractService implements LookupInterface
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 
         $result = curl_exec($ch);
-        if ($result === false) throw new HttpException('HTTP Exception', 400);
-
         $curl_errno = curl_errno($ch);
         $curl_error = curl_error($ch);
+
+        if ($result === false) {
+            throw new HttpException('Http Error: ' . $curl_errno . ' - ' . $curl_error, 400);
+        }
         if ($curl_errno) throw new HttpException($curl_error, 400);
 
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
