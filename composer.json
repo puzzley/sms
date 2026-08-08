@@ -41,7 +41,7 @@
                 "Puzzley\\SMS\\SMSServiceProvider"
             ],
             "aliases": {
-                "SMS": "Puzzley\\SMS\\Facades\\SMS"
+                "SMS": "Puzzley\\SMS\\SMS"
             }
         }
     },
